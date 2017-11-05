@@ -1,19 +1,6 @@
 CREATE DATABASE bamazon;
 
 USE bamazon;
-CREATE TABLE  products (
-  item_id INT NOT NULL AUTO_INCREMENT,
-  product_name VARCHAR(100) NOT NULL,
-  department_name VARCHAR(100) NULL,
-  price DECIMAL(10,4) NULL,
-  stock_quantity INT NULL,
-  PRIMARY KEY (item_id)
-);
-
-
-CREATE DATABASE bamazon;
-
-USE bamazon;
 
 CREATE TABLE  products (
   item_id INT NOT NULL AUTO_INCREMENT,
@@ -49,4 +36,3 @@ SELECT * FROM products p INNER JOIN departments d ON p.department_name=d.departm
 
 INSERT INTO departments (department_name) 
 VALUES ("Pet"),("Electronics"),("Clothes");
-

@@ -10,6 +10,7 @@ var updatedSales;
 var sales;
 var revenue;
 var price;
+var itemName;
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -30,11 +31,9 @@ connection.connect(function(err) {
   //console.log("connected as id " + connection.threadId);
   //checkQuantity();
   queryAllProducts()
+  Q1();
 });
 
-
-
-Q1();
 
 
 function queryAllProducts() {
@@ -43,8 +42,9 @@ function queryAllProducts() {
       console.log(err)
     }
     else{
+    console.log("\nItem ID | Item Name | Price |")
     for (var i = 0; i < res.length; i++) {
-      console.log("\n"+res[i].item_id + " | " + res[i].product_name + " | " + res[i].price + " | ");
+      console.log("\n"+res[i].item_id + " | " + res[i].product_name + " | $" + res[i].price + " | ");
     }
     console.log("-----------------------------------");
   }
@@ -80,6 +80,7 @@ function checkQuantity() {
             //console.log(res[0].stock_quantity)
             //console.log(query.sql)
             quantity = res[0].stock_quantity
+            itemName = res[0].product_name
             price = parseInt(res[0].price)
             sales = parseInt(res[0].product_sales)
             //console.log(quantity)
@@ -106,7 +107,7 @@ function Q2(){
 
 function generateOrder(){
     if (quantity >= itemCount){
-        console.log("\nGenerating your Order!")
+        console.log("\nGenerating your Order for " + itemCount + " " + itemName + "!")
         console.log("\nTotal Cost of order: " + "$" +itemCount*price + "\n")
         var diff = quantity - itemCount
         query = connection.query("UPDATE products SET stock_quantity=? WHERE item_id=?", [diff,itemID], function(err,resp){

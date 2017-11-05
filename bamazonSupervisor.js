@@ -4,6 +4,11 @@ require("console.table");
 var newDepartment;
 var newCost;
 var departmentArr = [];
+var totalSalesPet;
+var totalSalesEle;
+var totalSalesHom;
+var totalSalesClo;
+var totalSalesArr = [];
 
 var connection = mysql.createConnection({
   host: "localhost",
@@ -16,16 +21,44 @@ var connection = mysql.createConnection({
   password: "",
   database: "bamazon"
 });
+function begin(){
+var query = connection.query("SELECT * FROM products p INNER JOIN departments d ON p.department_name=d.department_name", function(err,res){
+  totalSalesEle = 0;
+  totalSalesPet = 0;
+  totalSalesClo = 0;
+  totalSalesHom =0;
+  //console.log(res)
+  for (var i = 0; i < res.length; i++){
+        if (res[i].department_id === 1){
+          totalSalesPet += parseInt(res[i].product_sales)
+        }
+        else if (res[i].department_id === 2){
+          totalSalesEle += parseInt(res[i].product_sales)
+        }
+        else if (res[i].department_id === 3){
+          totalSalesClo += parseInt(res[i].product_sales)
+        }
+        else if (res[i].department_id === 4){
+          totalSalesHom += parseInt(res[i].product_sales)
+        }
+    }
+    //console.log(totalSalesPet,totalSalesEle,totalSalesHom,totalSalesClo)
+    totalSalesArr.push(totalSalesPet)
+    totalSalesArr.push(totalSalesEle)
+    totalSalesArr.push(totalSalesClo)
+    totalSalesArr.push(totalSalesHom)
+})
+
 
 inquirer.prompt([
   {
     message: "Menu Options",
     name: "chosenOption",
     type: "list",
-    choices: ["View Product Sales by Department","Create New Department"]
+    choices: ["View Product Sales by Department","Create New Department", "End Session"]
   }
     ]).then(function(res){
-    console.log(res)
+    //console.log(res)
     var opt = res.chosenOption
     if (opt === "View Product Sales by Department"){
       viewProduct()
@@ -34,11 +67,14 @@ inquirer.prompt([
     else if(opt === "Create New Department"){
         createDepartment()
     }
+    else if (opt === "End Session"){
+      return
+    }
   })
-
-
+}
+begin();
 function viewProduct(){
-    var query = connection.query("SELECT * FROM products p INNER JOIN departments d ON p.department_name=d.department_name ", function(err, res) {
+    query = connection.query("SELECT d.department_id, d.department_name, d.over_head_costs FROM products p INNER JOIN departments d ON p.department_name=d.department_name GROUP BY d.department_name, d.department_id ORDER BY d.department_id ASC", function(err, res) {
         if (err){
             console.log(err)
         }
@@ -49,11 +85,11 @@ function viewProduct(){
             for(var i = 0; i < res.length; i++){
             console.table([
                     {
-                      Department_Id: res[0].department_id,
-                      Department_Name: res[0].department_name,
-                      Over_Head_Costs: res[0].over_head_costs,
-                      Product_Sales: res[0].product_sales,
-                      Total_Profit: res[0].total_profit
+                      Department_Id: res[i].department_id,
+                      Department_Name: res[i].department_name,
+                      Over_Head_Costs: res[i].over_head_costs,
+                      Product_Sales: totalSalesArr[i],
+                      Total_Profit: totalSalesArr[i]-parseInt(res[i].over_head_costs)
                     },
                 ])
             }
@@ -64,7 +100,7 @@ function viewProduct(){
 
 
 function createDepartment(){
-  console.log("Answer the following questions to create a new department")
+  console.log("\nAnswer the following questions to create a new department")
   inquirer.prompt([
   {
     message: "Enter department name",
@@ -82,18 +118,19 @@ function createDepartment(){
       newCost = res.cost
       departmentArr.push(newDepartment)
       departmentArr.push(newCost)
-      //console.log(departmentArr)
+      console.log(departmentArr)
       var VALUES = [];
       VALUES.push(departmentArr)
-      query = connection.query("INSERT INTO departments (department_name,over_head_costs) VALUES ?", [VALUES], function(res,err){
+      query = connection.query("INSERT INTO departments (department_name,over_head_costs) VALUES ?", [VALUES], function(err,res){
         if (err){
           console.log(err)
         }
         else{
         console.log("this is done")
-        //console.log(query.sql)
+        console.log(query.sql)
         }
       })
       connection.end()
-});
+  });
+  //begin();
 }
