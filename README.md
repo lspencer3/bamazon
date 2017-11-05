@@ -10,6 +10,7 @@ bamazonSupervisor.js
 
 
 See below for how each operates
+	
 	bamazonCustomer:
 		displays all available products for purchases
 		the user is them prompted to enter the id of the product they would like to buy
