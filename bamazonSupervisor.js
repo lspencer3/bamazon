@@ -22,64 +22,74 @@ var connection = mysql.createConnection({
   database: "bamazon"
 });
 function begin(){
-var query = connection.query("SELECT * FROM products p INNER JOIN departments d ON p.department_name=d.department_name", function(err,res){
-  totalSalesEle = 0;
-  totalSalesPet = 0;
-  totalSalesClo = 0;
-  totalSalesHom =0;
-  //console.log(res)
-  for (var i = 0; i < res.length; i++){
-        if (res[i].department_id === 1){
-          totalSalesPet += parseInt(res[i].product_sales)
-        }
-        else if (res[i].department_id === 2){
-          totalSalesEle += parseInt(res[i].product_sales)
-        }
-        else if (res[i].department_id === 3){
-          totalSalesClo += parseInt(res[i].product_sales)
-        }
-        else if (res[i].department_id === 4){
-          totalSalesHom += parseInt(res[i].product_sales)
-        }
+  var query = connection.query("SELECT * FROM products p INNER JOIN departments d ON p.department_name=d.department_name", function(err,res){
+    totalSalesEle = 0;
+    totalSalesPet = 0;
+    totalSalesClo = 0;
+    totalSalesHom =0;
+    //console.log(res)
+    for (var i = 0; i < res.length; i++){
+      if (res[i].department_id === 1){
+        totalSalesPet += parseInt(res[i].product_sales)
+      }
+      else if (res[i].department_id === 2){
+        totalSalesEle += parseInt(res[i].product_sales)
+      }
+      else if (res[i].department_id === 3){
+        totalSalesClo += parseInt(res[i].product_sales)
+      }
+      else if (res[i].department_id === 4){
+        totalSalesHom += parseInt(res[i].product_sales)
+      }
     }
     //console.log(totalSalesPet,totalSalesEle,totalSalesHom,totalSalesClo)
     totalSalesArr.push(totalSalesPet)
     totalSalesArr.push(totalSalesEle)
     totalSalesArr.push(totalSalesClo)
     totalSalesArr.push(totalSalesHom)
-})
+    //console.log(totalSalesArr)
+  })
 
 
-inquirer.prompt([
-  {
-    message: "Menu Options",
-    name: "chosenOption",
-    type: "list",
-    choices: ["View Product Sales by Department","Create New Department", "End Session"]
-  }
-    ]).then(function(res){
-    //console.log(res)
-    var opt = res.chosenOption
-    if (opt === "View Product Sales by Department"){
-      viewProduct()
+  inquirer.prompt([
+    {
+      message: "Menu Options",
+      name: "chosenOption",
+      type: "list",
+      choices: ["View Product Sales by Department","Create New Department", "End Session"]
+    }
+      ]).then(function(res){
+      //console.log(res)
+      var opt = res.chosenOption
+      if (opt === "View Product Sales by Department"){
+        viewProduct()
 
-    }
-    else if(opt === "Create New Department"){
-        createDepartment()
-    }
-    else if (opt === "End Session"){
-      return
-    }
+      }
+      else if(opt === "Create New Department"){
+          createDepartment()
+      }
+      else if (opt === "End Session"){
+        return
+      }
   })
 }
-begin();
+
+
+
+
+
+
+
+
+
+
 function viewProduct(){
-    query = connection.query("SELECT d.department_id, d.department_name, d.over_head_costs FROM products p INNER JOIN departments d ON p.department_name=d.department_name GROUP BY d.department_name, d.department_id ORDER BY d.department_id ASC", function(err, res) {
+    query = connection.query("SELECT d.department_id, d.department_name, d.over_head_costs FROM products p RIGHT JOIN departments d ON p.department_name=d.department_name GROUP BY d.department_name, d.department_id ORDER BY d.department_id ASC", function(err, res) {
         if (err){
             console.log(err)
         }
         else {
-            //console.log(res)
+            console.log(res)
             //console.log(query.sql)
             console.log("\n")
             for(var i = 0; i < res.length; i++){
@@ -134,3 +144,11 @@ function createDepartment(){
   });
   //begin();
 }
+
+
+
+begin();
+
+
+
+

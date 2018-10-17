@@ -15,10 +15,6 @@ CREATE TABLE  products (
 INSERT INTO products (product_name, department_name, price, stock_quantity) 
 VALUES ("iPhone X", "Electronics", 999.00, 24), ("Monopoly", "Games", 20.00, 40), ("Bose Soundbar and Speaker System","Electronics",1500.00,8),("Socks-Pink", "Clothes", 5.00,87),("Gryffindor T-Shirts", "Clothes", 30.00, 40);
 
-SELECT * FROM departments;
-
-UPDATE products SET product_sales = null WHERE item_id = 2;
-
 USE bamazon;
 
 CREATE TABLE  departments (
@@ -29,10 +25,5 @@ CREATE TABLE  departments (
 );
 
 
-ALTER TABLE products
-ADD product_sales VARCHAR (50);
-
-SELECT * FROM products p INNER JOIN departments d ON p.department_name=d.department_name;
-
-INSERT INTO departments (department_name) 
-VALUES ("Pet"),("Electronics"),("Clothes");
+INSERT INTO departments (department_name, over_head_costs) 
+VALUES ("Pet", 100 ),("Electronics", 300),("Clothes", 200);

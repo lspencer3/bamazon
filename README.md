@@ -3,6 +3,8 @@
 
 consists of 3 files to use in the terminal
 
+first run bamazon.sql in mysql workbench or some other database design tool to enter demo data
+
 
 bamazonCustomer.js
 bamazonManager.js
