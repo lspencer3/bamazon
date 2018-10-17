@@ -5,7 +5,7 @@ consists of 3 files to use in the terminal
 
 first run bamazon.sql in mysql workbench or some other database design tool to enter demo data
 
-
+then run the following node scripts from the command line:
 bamazonCustomer.js
 bamazonManager.js
 bamazonSupervisor.js
